@@ -5,7 +5,7 @@ use Plack::Builder;
 use Plack::Session;
 use Plack::Test;
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 use Dancer qw/:syntax :tests/;
 
 set apphandler => 'PSGI';
@@ -28,6 +28,10 @@ get '/' => sub {
         'session() returns same as $env->{"psgix.session"}'
     );
     
+    session->destroy;
+    is_deeply(session(), { }, 'session->destroy()');
+    ok($placksession->options->{expire}, 'session->destroy() set true $env->{"psgix.session.options"}{expire}');
+
     "ok";
 };
 
