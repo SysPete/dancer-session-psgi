@@ -20,7 +20,11 @@ sub init {
 }
 
 sub id {
-    Dancer::SharedData->request->{env}->{'psgix.session.options'}{id};
+    shift->options->{id};
+}
+
+sub options {
+    Dancer::SharedData->request->{env}->{'psgix.session.options'};
 }
 
 sub create {
