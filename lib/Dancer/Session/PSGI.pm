@@ -6,12 +6,21 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 
+use Dancer qw/:syntax setting/;
 use Dancer::SharedData;
 use base 'Dancer::Session::Abstract';
 
-# session_name can't be set in config for this module
-sub session_name {
-    "plack_session";
+sub init {
+    if (not setting('session_name')) {
+        setting('session_name', 'plack_session');
+    }
+    
+    # This module dont call $self->SUPER::init()
+    # Because session id is set by Plack::Middleware::Session.
+}
+
+sub id {
+    Dancer::SharedData->request->{env}->{'psgix.session.options'}{id};
 }
 
 sub create {
